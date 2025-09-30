@@ -1,0 +1,20 @@
+section{
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+.card{
+    box-shadow: 5px 5px 5px 5px rgb(63, 64, 63);
+    background-color: rgb(245, 218, 164);
+}
+.button{
+    margin-top: 3px;
+    background-color: aquamarine;
+}
+.divcart{
+    background-color: rgba(218, 243, 203, 0.955);
+}

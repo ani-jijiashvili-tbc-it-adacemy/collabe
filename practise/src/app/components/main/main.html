@@ -1,0 +1,47 @@
+<div class="main">
+  <ul>
+  <li (click)="allCards()" [class.active]="activeCategory == 0">All</li>
+  @for (item of catergories; track $index) {
+  <li (click)="filterCategory(item.id)" [class.active]="item.id === activeCategory">
+    {{ item.name }}
+  </li>
+  }
+</ul>
+<div class="res-container">
+  <div class="filterArea">
+    <h3>Filter products</h3>
+    <div class="spic">
+      <label for=""> Spiciness: {{ spiciness === '-1' ? 'not-chosen' : spiciness }}</label>
+      <input type="range" min="-" max="4" [(ngModel)]="spiciness" />
+    </div>
+    <div class="checks">
+      <input type="checkbox" [(ngModel)]="nuts" />
+      <label>Nuts</label>
+    </div>
+    <div class="checks">
+      <input type="checkbox" [(ngModel)]="vegetarian" />
+      <label>Vegetarian</label>
+    </div>
+    <button (click)="filterFoods()" class="button">Filter</button>
+    <button (click)="reset()" class="button">Reset</button>
+  </div>
+
+  <section class="section">
+    @for (item of allProducts; track $index) {
+    <div class="card" style="width: 18rem">
+      <img [src]="item.image" class="card-img-top" alt="..." />
+      <div class="card-body">
+        <h5 class="card-title">{{ item.name }}</h5>
+        <p class="card-text">{{ item.price }} $</p>
+        <p>სიცხარე:{{ item.spiciness }}</p>
+        <p class="card-text">თხილიანი: {{ item.nuts ? '✅' : '❌' }}</p>
+        <p class="card-text">ვეგეტარიანული: {{ item.vegeterian ? '✅' : '❌' }}</p>
+        <a href="#" class="btn btn-primary" (click)="addToCart(item)">კალათაში დამატება</a>
+      </div>
+    </div>
+
+    }
+  </section>
+</div>
+
+</div>

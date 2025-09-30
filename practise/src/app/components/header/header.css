@@ -1,0 +1,19 @@
+header{
+    height: 400px;
+    background-image: url(../../../../project.png)
+}
+.divheader{
+    display: flex;
+    justify-content: space-around;
+}
+h1{
+    margin-top: 60px;
+    color:aqua;
+}
+ul{
+    margin-top: 70px;
+    display: flex;
+    color: aqua;
+    gap: 20px;
+    font-size: 20px;
+}

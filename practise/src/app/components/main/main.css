@@ -1,0 +1,59 @@
+section, ul{
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+.card{
+    box-shadow: 5px 5px 5px 5px rgb(63, 64, 63);
+    background-color: rgb(245, 218, 164);
+}
+ul{
+    gap: 5px;
+}
+li{
+    border: 1px solid black;
+    background-color: rgb(174, 240, 213);
+    font-size: 20px;
+    cursor: pointer;
+}
+.active{
+    color: red;
+    background-color: black;
+}
+.filterArea{
+    background-color: rgb(213, 211, 209);
+    box-shadow: 5px 5px 5px 5px rgb(63, 64, 63);
+    border: 1px solid black;
+    width: 200px;
+    height: 250px;
+    margin: 15px;
+    margin-top: 40px;
+    border-radius: 5%;
+    
+}
+h3{
+    padding: 5px;
+    font-size: 25px;
+    color: red;
+}
+.spic{
+    padding: 10px;
+}
+.checks{
+    margin: 10px;
+}
+.button{
+    background-color: aqua;
+    margin: 10px;
+}
+.res-container{
+    display: flex;
+}
+.main{
+
+    background-color: rgba(218, 243, 203, 0.955);
+}
