@@ -1,0 +1,171 @@
+<div class="conversion-container">
+  <h1>ჩვენთან საუკეთესო კურსია</h1>
+
+  <div class="conversion-form">
+    <form [formGroup]="conversionForm">
+      <div class="form-group">
+        <label for="fromAccount">ანგარიში 1 (საიდან)</label>
+        <div class="select-wrapper">
+          <select
+            id="fromAccount"
+            class="form-control"
+            formControlName="fromAccountId"
+          >
+            <option value="">გთხოვთ აირჩიოთ ექაუნთი</option>
+            <option
+              *ngFor="let account of senderAccounts"
+              [value]="account.id"
+              [title]="getAccountTooltip(account.id, false)"
+              [disabled]="isAccountDisabled(account.id, true)"
+              (mouseenter)="onMouseEnter(account.id)"
+              (mouseleave)="onMouseLeave()"
+            >
+              {{ getAccountDisplayName(account) }}
+            </option>
+          </select>
+          <div
+            class="custom-tooltip"
+            *ngIf="shouldShowTooltipForAccount(hoveredAccountId, true)"
+          >
+            {{ getAccountTooltip(hoveredAccountId, true) }}
+          </div>
+        </div>
+        <div class="validation-error" *ngIf="fromAccountValidationError">
+          {{ fromAccountValidationError }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="toAccount">ანგარიში 2 (სად)</label>
+        <div class="select-wrapper">
+          <select
+            id="toAccount"
+            class="form-control"
+            formControlName="toAccountId"
+          >
+            <option value="">გთხოვთ აირჩიოთ ექაუნთი</option>
+            <option
+              *ngFor="let account of receiverAccounts"
+              [value]="account.id"
+              [title]="getAccountTooltip(account.id, false)"
+              [disabled]="isAccountDisabled(account.id, false)"
+              (mouseenter)="onMouseEnter(account.id)"
+              (mouseleave)="onMouseLeave()"
+            >
+              {{ getAccountDisplayName(account) }}
+            </option>
+          </select>
+          <div
+            class="custom-tooltip"
+            *ngIf="shouldShowTooltipForAccount(hoveredAccountId, false)"
+          >
+            {{ getAccountTooltip(hoveredAccountId, false) }}
+          </div>
+        </div>
+        <div class="validation-error" *ngIf="toAccountValidationError">
+          {{ toAccountValidationError }}
+        </div>
+      </div>
+
+      <div class="rate-display" *ngIf="showRateDisplay">
+        <p class="rate-text">
+          {{ getRateDisplayText() }}
+        </p>
+      </div>
+
+      <div class="rate-display" *ngIf="isLoadingRate">
+        <p class="rate-text loading">{{ getLoadingRateText() }}</p>
+      </div>
+
+      <div class="amount-section" *ngIf="showAmountSection">
+        <div class="form-group">
+          <label for="fromAmount">
+            გადასარიცხი თანხა: ({{ selectedFromAccount?.currency }})
+          </label>
+          <input
+            type="number"
+            id="fromAmount"
+            class="form-control"
+            formControlName="fromAmount"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+          />
+          <div class="validation-error" *ngIf="fromAmountValidationError">
+            {{ fromAmountValidationError }}
+          </div>
+        </div>
+
+        <div class="conversation-box">
+          <img
+            class="conversion-svg"
+            src="../../../assets/convert-card-svgrepo-com.svg"
+            alt="exchange"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="toAmount">
+            მისაღები თანხა: ({{ selectedToAccount?.currency }})
+          </label>
+          <input
+            type="number"
+            id="toAmount"
+            class="form-control"
+            formControlName="toAmount"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+          />
+          <div class="validation-error" *ngIf="toAmountValidationError">
+            {{ toAmountValidationError }}
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-danger" *ngIf="balanceError">
+        {{ balanceError }}
+      </div>
+
+      <div class="alert alert-danger" *ngIf="conversionError">
+        {{ conversionError }}
+      </div>
+
+      <div class="alert alert-success" *ngIf="conversionSuccess">
+        {{ conversionSuccess }}
+      </div>
+
+      <div class="button-group">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="getConvertButtonDisabledState()"
+          (click)="onConvert()"
+        >
+          {{ getConvertButtonText() }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="balances-section" *ngIf="showBalancesSection">
+    <h3>მიმდინარე ბალანსი</h3>
+    <div class="balance-cards">
+      <div class="balance-card" *ngIf="selectedFromAccount">
+        <h4>{{ selectedFromAccount.accountName }}</h4>
+        <p class="balance-amount">
+          {{ selectedFromAccount.balance }} {{ selectedFromAccount.currency }}
+        </p>
+        <p class="account-number">{{ selectedFromAccount.accountNumber }}</p>
+      </div>
+
+      <div class="balance-card" *ngIf="selectedToAccount">
+        <h4>{{ selectedToAccount.accountName }}</h4>
+        <p class="balance-amount">
+          {{ selectedToAccount.balance }} {{ selectedToAccount.currency }}
+        </p>
+        <p class="account-number">{{ selectedToAccount.accountNumber }}</p>
+      </div>
+    </div>
+  </div>
+</div>

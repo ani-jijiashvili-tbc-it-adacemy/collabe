@@ -1,0 +1,222 @@
+.conversion-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px;
+  h1 {
+    text-align: center;
+    color:rgb(70, 69, 68);
+    margin-bottom: 30px;
+  }
+}
+
+.conversion-form {
+  background:rgb(232, 201, 233);
+  padding: 30px;
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: grey;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgb(246, 155, 237);
+    border-radius: 4px;
+    font-size: 16px;
+
+    &:focus {
+      outline: none;
+      border-color: rgb(219, 56, 83);
+    }
+
+    &:disabled {
+      background-color: white;
+      cursor: not-allowed;
+    }
+  }
+
+  select.form-control {
+    cursor: pointer;
+
+    option:disabled {
+      color: grey;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.select-wrapper {
+  position: relative;
+}
+
+.custom-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 5px;
+  padding: 8px 12px;
+  background-color: rgb(72, 70, 70);
+  color: white;
+  border-radius: 4px;
+  font-size: 13px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: fade 0.2s ease-in;
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 20px;
+    border: 6px solid transparent;
+    border-bottom-color: darkblue;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rate-display {
+  margin: 20px 0;
+  padding: 15px;
+  background: wheat;
+  border-radius: 4px;
+  text-align: center;
+
+  .rate-text {
+    margin: 0;
+    font-size: 16px;
+    color:black;
+    font-weight: 500;
+
+    &.loading {
+      color: grey;    }
+  }
+}
+
+.amount-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid whitesmoke;
+}
+.conversation-box {
+  display: flex;
+  justify-content: center;
+  .conversion-svg {
+    max-width: 50px;
+  }
+}
+
+.validation-error {
+  margin-top: 5px;
+  font-size: 13px;
+  color: red;
+}
+
+.alert {
+  padding: 12px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 14px;
+
+  &.alert-danger {
+    background-color: pink;
+    color: rgb(168, 20, 34);
+    border: 1px solid rgb(205, 118, 132);
+  }
+
+  &.alert-success {
+    background-color: rgb(173, 188, 173);
+    color: green;
+    border: 1px solid rgb(5, 46, 5)
+  }
+}
+
+.button-group {
+  margin-top: 25px;
+  text-align: center;
+
+  .btn {
+    padding: 12px 40px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &.btn-primary {
+      background-color: rgb(159, 20, 43);
+      color: white;
+
+      &:hover:not(:disabled) {
+        background-color: rgb(98, 4, 20);
+      }
+
+      &:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+.balances-section {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 2px solid rgb(233, 236, 239);
+
+  h3 {
+    text-align: center;
+    color:black;
+    margin-bottom: 20px;
+  }
+}
+
+.balance-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.balance-card {
+  background: rgb(236, 75, 102);
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+
+  h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .balance-amount {
+    margin: 15px 0;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .account-number {
+    margin: 5px 0 0 0;
+    font-size: 12px;
+    opacity: 0.9;
+  }
+}

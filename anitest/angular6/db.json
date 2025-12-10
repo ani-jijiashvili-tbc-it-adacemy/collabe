@@ -1,0 +1,143 @@
+{
+  "sender-accounts": [
+    {
+      "id": "s1",
+      "accountNumber": "ACC-001",
+      "accountName": "პირადი ანგარიში",
+      "currency": "GEL",
+      "balance": 4208
+    },
+    {
+      "id": "s2",
+      "accountNumber": "ACC-002",
+      "accountName": "ბიზნეს ანგარიში",
+      "currency": "USD",
+      "balance": 9950
+    },
+    {
+      "id": "s3",
+      "accountNumber": "ACC-003",
+      "accountName": "სამაჩერო ანგარიში",
+      "currency": "EUR",
+      "balance": 8000
+    },
+    {
+      "id": "s4",
+      "accountNumber": "ACC-004",
+      "accountName": "ინვესტიციის ანგარიში",
+      "currency": "GEL",
+      "balance": 15000
+    }
+  ],
+  "receiver-accounts": [
+    {
+      "id": "r1",
+      "accountNumber": "ACC-101",
+      "accountName": "USD ანგარიში",
+      "currency": "USD",
+      "balance": 2222
+    },
+    {
+      "id": "r2",
+      "accountNumber": "ACC-102",
+      "accountName": "EUR ანგარიში",
+      "currency": "EUR",
+      "balance": 3077.28
+    },
+    {
+      "id": "r3",
+      "accountNumber": "ACC-103",
+      "accountName": "GEL ანგარიში",
+      "currency": "GEL",
+      "balance": 1000
+    },
+    {
+      "id": "r4",
+      "accountNumber": "ACC-104",
+      "accountName": "GBP ანგარიში",
+      "currency": "GBP",
+      "balance": 5029
+    },
+    {
+      "id": "r5",
+      "accountNumber": "ACC-105",
+      "accountName": "GEL დამატებითი",
+      "currency": "GEL",
+      "balance": 2500
+    }
+  ],
+  "conversion-rates": [
+    {
+      "id": "rate1",
+      "from": "GEL",
+      "to": "USD",
+      "rate": 0.37
+    },
+    {
+      "id": "rate2",
+      "from": "GEL",
+      "to": "EUR",
+      "rate": 0.34
+    },
+    {
+      "id": "rate3",
+      "from": "GEL",
+      "to": "GBP",
+      "rate": 0.29
+    },
+    {
+      "id": "rate4",
+      "from": "USD",
+      "to": "GEL",
+      "rate": 2.7
+    },
+    {
+      "id": "rate5",
+      "from": "USD",
+      "to": "EUR",
+      "rate": 0.92
+    },
+    {
+      "id": "rate6",
+      "from": "USD",
+      "to": "GBP",
+      "rate": 0.79
+    },
+    {
+      "id": "rate7",
+      "from": "EUR",
+      "to": "GEL",
+      "rate": 2.94
+    },
+    {
+      "id": "rate8",
+      "from": "EUR",
+      "to": "USD",
+      "rate": 1.09
+    },
+    {
+      "id": "rate9",
+      "from": "EUR",
+      "to": "GBP",
+      "rate": 0.86
+    },
+    {
+      "id": "rate10",
+      "from": "GBP",
+      "to": "GEL",
+      "rate": 3.45
+    },
+    {
+      "id": "rate11",
+      "from": "GBP",
+      "to": "USD",
+      "rate": 1.27
+    },
+    {
+      "id": "rate12",
+      "from": "GBP",
+      "to": "EUR",
+      "rate": 1.16
+    }
+  ]
+}
