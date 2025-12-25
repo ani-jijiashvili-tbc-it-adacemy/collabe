@@ -1,0 +1,634 @@
+<div class="create-event-page">
+  @if (isLoading()) {
+    <div class="loading-container">
+      <app-loading-spinner />
+    </div>
+  } @else {
+    <div class="breadcrumb">
+      <button type="button" class="breadcrumb-link" (click)="navigateBack()">
+        {{ isEditMode() ? 'Event Details' : 'Event Management' }}
+      </button>
+      <i class="pi pi-chevron-right"></i>
+      <span>{{ isEditMode() ? 'Edit Event' : 'Create Event' }}</span>
+    </div>
+
+    <header class="page-header">
+      <div class="header-content">
+        <div>
+          <h1>{{ pageTitle() }}</h1>
+          <p class="subtitle">{{ pageSubtitle() }}</p>
+        </div>
+        <button
+          type="button"
+          pButton
+          label="Preview"
+          icon="pi pi-eye"
+          (click)="onPreview()"
+          class="preview-btn"
+          [disabled]="form.invalid"
+        ></button>
+      </div>
+    </header>
+
+    @if (error()) {
+      <div class="error-message">
+        <i class="pi pi-exclamation-circle"></i>
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    @if (hasDateRangeError()) {
+      <div class="error-message">
+        <i class="pi pi-exclamation-circle"></i>
+        <span>End date and time must be after start date and time</span>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="event-form">
+      <div class="form-layout">
+        <div class="form-main">
+          <section class="form-section">
+            <div class="section-header">
+              <i class="pi pi-info-circle"></i>
+              <h2>Basic Information</h2>
+            </div>
+            <p class="section-description">Essential event details and description</p>
+
+            <div class="form-field">
+              <label for="eventType">Event Type *</label>
+              <p-select
+                id="eventType"
+                formControlName="eventTypeId"
+                [options]="eventTypes()"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Select a category"
+                styleClass="w-full"
+                [class.invalid]="hasError('eventTypeId')"
+              />
+              @if (hasError('eventTypeId')) {
+                <small class="error-text">{{ getError('eventTypeId') }}</small>
+              }
+            </div>
+
+            <div class="form-field">
+              <label for="title">Event Title *</label>
+              <input
+                id="title"
+                type="text"
+                pInputText
+                formControlName="title"
+                placeholder="Enter event title"
+                [class.invalid]="hasError('title')"
+              />
+              @if (hasError('title')) {
+                <small class="error-text">{{ getError('title') }}</small>
+              }
+              <small class="helper-text">Maximum 200 characters ({{ form.get('title')?.value?.length || 0 }}/200)</small>
+            </div>
+
+            <div class="form-field">
+              <label for="description">Event Description *</label>
+              <textarea
+                id="description"
+                pInputTextarea
+                formControlName="description"
+                placeholder="Provide a detailed explanation of the event, including objectives, activities, and what participants can expect"
+                rows="6"
+                [class.invalid]="hasError('description')"
+              ></textarea>
+              @if (hasError('description')) {
+                <small class="error-text">{{ getError('description') }}</small>
+              }
+              <small class="helper-text">Minimum 50 characters ({{ form.get('description')?.value?.length || 0 }}/2000)</small>
+            </div>
+
+            <div class="form-field">
+              <label for="imageUrl">Event Image</label>
+              <div class="image-upload">
+                <div class="image-preview">
+                  @if (form.get('imageUrl')?.value) {
+                    <img [src]="form.get('imageUrl')!.value" alt="Event preview" />
+                  } @else {
+                    <div class="image-placeholder">
+                      <i class="pi pi-image"></i>
+                      <span>No image selected</span>
+                    </div>
+                  }
+                </div>
+                <div class="upload-controls">
+                  <input
+                    id="imageUrl"
+                    type="text"
+                    pInputText
+                    formControlName="imageUrl"
+                    placeholder="Enter image URL"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    (change)="onImageSelect($event)"
+                    style="display: none"
+                    #fileInput
+                  />
+                  <button 
+                    type="button" 
+                    pButton 
+                    label="Upload File" 
+                    icon="pi pi-upload" 
+                    class="upload-btn"
+                    (click)="fileInput.click()"
+                  ></button>
+                </div>
+              </div>
+              <small class="helper-text">Recommended: 1200x630px (16:9 aspect ratio)</small>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-header">
+              <i class="pi pi-calendar"></i>
+              <h2>Date & Time</h2>
+            </div>
+            <p class="section-description">Schedule your event</p>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="startDateTime">Start Date & Time *</label>
+                <p-datePicker
+                  id="startDateTime"
+                  formControlName="startDateTime"
+                  [showTime]="true"
+                  [showIcon]="true"
+                  placeholder="Select start date and time"
+                  dateFormat="mm/dd/yy"
+                  styleClass="w-full"
+                  [class.invalid]="hasError('startDateTime')"
+                />
+                @if (hasError('startDateTime')) {
+                  <small class="error-text">{{ getError('startDateTime') }}</small>
+                }
+              </div>
+
+              <div class="form-field">
+                <label for="endDateTime">End Date & Time *</label>
+                <p-datePicker
+                  id="endDateTime"
+                  formControlName="endDateTime"
+                  [showTime]="true"
+                  [showIcon]="true"
+                  placeholder="Select end date and time"
+                  dateFormat="mm/dd/yy"
+                  styleClass="w-full"
+                  [class.invalid]="hasError('endDateTime')"
+                />
+                @if (hasError('endDateTime')) {
+                  <small class="error-text">{{ getError('endDateTime') }}</small>
+                }
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="registrationDeadline">Registration Deadline</label>
+              <p-datePicker
+                id="registrationDeadline"
+                formControlName="registrationDeadline"
+                [showTime]="true"
+                [showIcon]="true"
+                placeholder="Participants can no longer sign up after this date"
+                dateFormat="mm/dd/yy"
+                styleClass="w-full"
+              />
+              <small class="helper-text">Set when participants can no longer sign up</small>
+            </div>
+          </section>
+
+          <!-- Location -->
+          <section class="form-section">
+            <div class="section-header">
+              <i class="pi pi-map-marker"></i>
+              <h2>Location</h2>
+            </div>
+            <p class="section-description">Where will the event take place</p>
+
+            <div class="form-field">
+              <label>Event Type</label>
+              <div class="location-type-selector">
+                @for (type of locationTypes; track type) {
+                  <button
+                    type="button"
+                    class="location-type-btn"
+                    [class.active]="selectedLocationType() === type"
+                    (click)="onLocationTypeChange(type)"
+                  >
+                    <i [class]="type === 'in-person' ? 'pi pi-building' : type === 'virtual' ? 'pi pi-video' : 'pi pi-sitemap'"></i>
+                    <span>{{ type === 'in-person' ? 'In Person' : type === 'virtual' ? 'Virtual' : 'Hybrid' }}</span>
+                  </button>
+                }
+              </div>
+            </div>
+
+            @if (selectedLocationType() === 'in-person' || selectedLocationType() === 'hybrid') {
+              <div class="form-field">
+                <label for="venueDetails">Venue Name *</label>
+                <input
+                  id="venueDetails"
+                  type="text"
+                  pInputText
+                  formControlName="venueDetails"
+                  placeholder="e.g., Grand Conference Hall, Building A"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="location">Street Address *</label>
+                <input
+                  id="location"
+                  type="text"
+                  pInputText
+                  formControlName="location"
+                  placeholder="Street address"
+                  [class.invalid]="hasError('location')"
+                />
+                @if (hasError('location')) {
+                  <small class="error-text">{{ getError('location') }}</small>
+                }
+              </div>
+
+              <div class="form-field">
+                <label for="city">City *</label>
+                <input
+                  id="city"
+                  type="text"
+                  pInputText
+                  formControlName="city"
+                  placeholder="Enter city"
+                  [class.invalid]="hasError('city')"
+                />
+                @if (hasError('city')) {
+                  <small class="error-text">{{ getError('city') }}</small>
+                }
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="roomNumber">Room Number</label>
+                  <input
+                    id="roomNumber"
+                    type="text"
+                    pInputText
+                    formControlName="roomNumber"
+                    placeholder="e.g., Room 301"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="floor">Floor</label>
+                  <input
+                    id="floor"
+                    type="text"
+                    pInputText
+                    formControlName="floor"
+                    placeholder="e.g., 3rd Floor"
+                  />
+                </div>
+              </div>
+            }
+
+            @if (selectedLocationType() === 'virtual' || selectedLocationType() === 'hybrid') {
+              <div class="form-field">
+                <label for="meetingLink">Meeting Link *</label>
+                <input
+                  id="meetingLink"
+                  type="text"
+                  pInputText
+                  formControlName="location"
+                  placeholder="https://meet.google.com/xxx-xxxx-xxx"
+                  [class.invalid]="hasError('location')"
+                />
+                @if (hasError('location')) {
+                  <small class="error-text">{{ getError('location') }}</small>
+                }
+              </div>
+            }
+
+            <div class="form-field">
+              <label for="additionalNotes">Additional Location Notes</label>
+              <textarea
+                id="additionalNotes"
+                pInputTextarea
+                formControlName="additionalNotes"
+                placeholder="Parking instructions, accessibility details, transportation options, etc."
+                rows="3"
+              ></textarea>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-header">
+              <i class="pi pi-list"></i>
+              <h2>Event Agenda</h2>
+            </div>
+            <p class="section-description">Add schedule items for your event</p>
+
+            @for (item of agendaItems.controls; track $index) {
+              <div class="agenda-item" [formGroupName]="$index">
+                <div class="form-row">
+                  <div class="form-field">
+                    <label>Time</label>
+                    <input
+                      type="text"
+                      pInputText
+                      formControlName="time"
+                      placeholder="e.g., 9:00 AM - 10:00 AM"
+                    />
+                  </div>
+
+                  <div class="form-field flex-grow">
+                    <label>Topic</label>
+                    <input
+                      type="text"
+                      pInputText
+                      formControlName="title"
+                      placeholder="e.g., Welcome & Introduction"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    pButton
+                    icon="pi pi-trash"
+                    class="delete-btn"
+                    (click)="removeAgendaItem($index)"
+                  ></button>
+                </div>
+
+                <div class="form-field">
+                  <label>Description</label>
+                  <textarea
+                    pInputTextarea
+                    formControlName="description"
+                    placeholder="Optional details about this agenda item"
+                    rows="2"
+                  ></textarea>
+                </div>
+              </div>
+            }
+
+            <button
+              type="button"
+              pButton
+              label="Add Agenda Item"
+              icon="pi pi-plus"
+              class="add-btn"
+              (click)="addAgendaItem()"
+            ></button>
+          </section>
+
+          <section class="form-section">
+            <div class="section-header">
+              <i class="pi pi-users"></i>
+              <h2>Speakers / Facilitators</h2>
+            </div>
+            <p class="section-description">Add speakers or facilitators for this event</p>
+
+            @for (speaker of speakersList.controls; track $index) {
+              <div class="speaker-item" [formGroupName]="$index">
+                <div class="form-row">
+                  <div class="form-field">
+                    <label>Name *</label>
+                    <input
+                      type="text"
+                      pInputText
+                      formControlName="name"
+                      placeholder="Speaker name"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label>Title/Role *</label>
+                    <input
+                      type="text"
+                      pInputText
+                      formControlName="title"
+                      placeholder="e.g., Senior Manager"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    pButton
+                    icon="pi pi-trash"
+                    class="delete-btn"
+                    (click)="removeSpeaker($index)"
+                  ></button>
+                </div>
+
+                <div class="form-field">
+                  <label>Bio</label>
+                  <textarea
+                    pInputTextarea
+                    formControlName="bio"
+                    placeholder="Short biography or description"
+                    rows="2"
+                  ></textarea>
+                </div>
+
+                <div class="form-field">
+                  <label>Photo URL</label>
+                  <input
+                    type="text"
+                    pInputText
+                    formControlName="photo"
+                    placeholder="https://example.com/photo.jpg"
+                  />
+                </div>
+              </div>
+            }
+
+            <button
+              type="button"
+              pButton
+              label="Add Speaker"
+              icon="pi pi-plus"
+              class="add-btn"
+              (click)="addSpeaker()"
+            ></button>
+          </section>
+
+          <section class="form-section">
+            <div class="section-header">
+              <i class="pi pi-users"></i>
+              <h2>Capacity & Registration</h2>
+            </div>
+            <p class="section-description">Manage event capacity and registration settings</p>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="capacity">Maximum Capacity *</label>
+                <p-inputNumber
+                  id="capacity"
+                  formControlName="capacity"
+                  [min]="1"
+                  [max]="10000"
+                  placeholder="Enter max participants"
+                  styleClass="w-full"
+                  [class.invalid]="hasError('capacity')"
+                />
+                @if (hasError('capacity')) {
+                  <small class="error-text">{{ getError('capacity') }}</small>
+                }
+              </div>
+
+              <div class="form-field">
+                <label for="minimumParticipants">Minimum Participants</label>
+                <p-inputNumber
+                  id="minimumParticipants"
+                  formControlName="minimumParticipants"
+                  [min]="0"
+                  placeholder="Optional minimum"
+                  styleClass="w-full"
+                />
+              </div>
+            </div>
+
+            <div class="checkbox-group">
+              <div class="checkbox-field">
+                <p-checkbox
+                  formControlName="enableWaitlist"
+                  [binary]="true"
+                  inputId="enableWaitlist"
+                />
+                <label for="enableWaitlist">Enable Waitlist</label>
+                <p class="checkbox-description">Allow participants to join waitlist when full</p>
+              </div>
+
+              @if (form.get('enableWaitlist')?.value) {
+                <div class="form-field indent">
+                  <label for="waitlistCapacity">Waitlist Capacity</label>
+                  <p-inputNumber
+                    id="waitlistCapacity"
+                    formControlName="waitlistCapacity"
+                    [min]="0"
+                    placeholder="Maximum waitlist spots"
+                    styleClass="w-full"
+                  />
+                </div>
+
+                <div class="checkbox-field indent">
+                  <p-checkbox
+                    formControlName="autoPromoteWaitlist"
+                    [binary]="true"
+                    inputId="autoPromoteWaitlist"
+                  />
+                  <label for="autoPromoteWaitlist">Auto-promote from waitlist</label>
+                </div>
+              }
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-header">
+              <i class="pi pi-bell"></i>
+              <h2>Notification Settings</h2>
+            </div>
+            <p class="section-description">Configure automated participant notifications</p>
+
+            <div class="checkbox-group">
+              <div class="checkbox-field">
+                <p-checkbox
+                  formControlName="registrationConfirmation"
+                  [binary]="true"
+                  inputId="registrationConfirmation"
+                />
+                <label for="registrationConfirmation">Registration Confirmation</label>
+                <p class="checkbox-description">Send confirmation after sign-up</p>
+              </div>
+
+              <div class="checkbox-field">
+                <p-checkbox
+                  formControlName="reminder24h"
+                  [binary]="true"
+                  inputId="reminder24h"
+                />
+                <label for="reminder24h">24-Hour Reminder</label>
+                <p class="checkbox-description">Send reminder 1 day before event</p>
+              </div>
+
+              <div class="checkbox-field">
+                <p-checkbox
+                  formControlName="reminder1h"
+                  [binary]="true"
+                  inputId="reminder1h"
+                />
+                <label for="reminder1h">1-Hour Reminder</label>
+                <p class="checkbox-description">Send reminder 1 hour before</p>
+              </div>
+
+              <div class="checkbox-field">
+                <p-checkbox
+                  formControlName="eventUpdates"
+                  [binary]="true"
+                  inputId="eventUpdates"
+                />
+                <label for="eventUpdates">Event Updates</label>
+                <p class="checkbox-description">Notify when details change</p>
+              </div>
+
+              <div class="checkbox-field">
+                <p-checkbox
+                  formControlName="waitlistUpdates"
+                  [binary]="true"
+                  inputId="waitlistUpdates"
+                />
+                <label for="waitlistUpdates">Waitlist Updates</label>
+                <p class="checkbox-description">Notify waitlisted participants of status changes</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="form-sidebar">
+          <div class="preview-card">
+            <h3>Event Preview</h3>
+            <div class="preview-content">
+              <div class="preview-category">
+                <span class="category-badge">{{ selectedEventTypeName() }}</span>
+              </div>
+              <div class="preview-date">
+                <span>{{ formattedStartDate() }}</span>
+              </div>
+              <div class="preview-location">
+                <span>{{ form.get('location')?.value || 'Location not set' }}</span>
+              </div>
+              <div class="preview-capacity">
+                <span>Capacity: {{ form.get('capacity')?.value || 0 }}</span>
+              </div>
+              <div class="preview-status">
+                <span class="status-badge">Draft</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          pButton
+          label="Cancel"
+          (click)="onCancel()"
+          class="cancel-btn"
+        ></button>
+        <button
+          type="submit"
+          pButton
+          [label]="isEditMode() ? 'Update Event' : 'Publish Event'"
+          [disabled]="isSaving()"
+          [loading]="isSaving()"
+          class="submit-btn"
+        ></button>
+      </div>
+    </form>
+  }
+</div>

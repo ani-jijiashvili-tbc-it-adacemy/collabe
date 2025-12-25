@@ -1,0 +1,124 @@
+.my-registrations-page {
+  min-height: 100vh;
+  background: #f9fafb;
+
+  .page-header {
+    background: white;
+    padding: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+
+    h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #111827;
+      margin: 0 0 0.5rem 0;
+    }
+
+    p {
+      color: #6b7280;
+      margin: 0;
+    }
+  }
+
+  .page-content {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 2rem;
+
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+    }
+
+    .tabs-container {
+      background: white;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+      .tabs-header {
+        display: flex;
+        border-bottom: 2px solid #e5e7eb;
+
+        .tab-btn {
+          flex: 1;
+          padding: 1rem 1.5rem;
+          background: none;
+          border: none;
+          font-weight: 600;
+          font-size: 0.875rem;
+          color: #6b7280;
+          cursor: pointer;
+          transition: all 0.2s;
+          border-bottom: 3px solid transparent;
+          margin-bottom: -2px;
+
+          &:hover {
+            background: #f9fafb;
+            color: #374151;
+          }
+
+          &.active {
+            color: #00adee;
+            border-bottom-color: #00adee;
+            background: white;
+          }
+        }
+      }
+
+      .tabs-content {
+        padding: 1.5rem;
+      }
+    }
+
+    .registrations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 1.5rem;
+
+      @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+
+      i {
+        font-size: 4rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #374151;
+        margin: 0 0 0.5rem 0;
+      }
+
+      p {
+        color: #6b7280;
+        margin: 0 0 1.5rem 0;
+      }
+
+      .browse-btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: #00adee;
+        color: white;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #0084b8;
+        }
+      }
+    }
+  }
+}

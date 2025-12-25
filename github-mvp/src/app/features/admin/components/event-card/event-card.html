@@ -1,0 +1,73 @@
+<div class="event-card">
+  <div class="event-icon">
+    <i class="pi pi-calendar"></i>
+  </div>
+  
+  <div class="event-details">
+    <h3 class="event-title">{{ event().title }}</h3>
+    <p class="event-description">{{ event().description }}</p>
+  </div>
+  
+  <div class="event-datetime">
+    <div class="event-date">{{ formatDate(event().startDateTime) }}</div>
+    <div class="event-time">
+      {{ formatTime(event().startDateTime) }} - {{ formatTime(event().endDateTime) }}
+    </div>
+  </div>
+  
+  <div class="event-location">
+    <i class="pi pi-map-marker"></i>
+    <span>{{ event().location }}</span>
+  </div>
+  
+  <div class="event-category">
+    <span class="category-badge">{{ event().eventType.name }}</span>
+  </div>
+  
+  <div class="event-registrations">
+    <div class="registration-count">{{ event().registeredCount }} / {{ event().capacity }}</div>
+    <div class="registration-bar">
+      <div 
+        class="registration-fill" 
+        [style.width.%]="event().utilizationPercentage"
+      ></div>
+    </div>
+    <div class="spots-left">
+      {{ event().utilizationPercentage }}%
+      <span class="text-muted">{{ event().spotsLeft }} spots left</span>
+    </div>
+  </div>
+  
+  <div class="event-status">
+    <span class="status-badge" [ngClass]="getStatusClass()">
+      {{ event().status }}
+    </span>
+  </div>
+  
+  <div class="event-actions">
+    <button 
+      type="button" 
+      class="action-btn view-btn"
+      (click)="onView()"
+      title="View Details"
+    >
+      <i class="pi pi-eye"></i>
+    </button>
+    <button 
+      type="button" 
+      class="action-btn edit-btn"
+      (click)="onEdit()"
+      title="Edit Event"
+    >
+      <i class="pi pi-pencil"></i>
+    </button>
+    <button 
+      type="button" 
+      class="action-btn delete-btn"
+      (click)="onDelete()"
+      title="Delete Event"
+    >
+      <i class="pi pi-trash"></i>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+<div class="my-registrations-page">
+  <div class="page-header">
+    <h1>My Registrations</h1>
+    <p>Manage your event registrations</p>
+  </div>
+
+  <div class="page-content">
+    @if (loading()) {
+      <div class="loading-container">
+        <app-loading-spinner [size]="'80px'" />
+      </div>
+    } @else {
+      <div class="tabs-container">
+        <div class="tabs-header">
+          <button
+            class="tab-btn"
+            [class.active]="activeTab() === 'upcoming'"
+            (click)="setActiveTab('upcoming')">
+            Upcoming ({{ upcomingRegistrations().length }})
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="activeTab() === 'past'"
+            (click)="setActiveTab('past')">
+            Past ({{ pastRegistrations().length }})
+          </button>
+        </div>
+
+        <div class="tabs-content">
+          @if (activeTab() === 'upcoming') {
+            @if (upcomingRegistrations().length > 0) {
+              <div class="registrations-grid">
+                @for (registration of upcomingRegistrations(); track registration.id) {
+                  <app-registration-card
+                    [registration]="registration"
+                    (cancelClick)="onCancelRegistration($event)" />
+                }
+              </div>
+            } @else {
+              <div class="empty-state">
+                <i class="pi pi-calendar"></i>
+                <h3>No upcoming registrations</h3>
+                <p>You haven't registered for any upcoming events yet</p>
+                <a routerLink="/user/events" class="browse-btn">
+                  Browse Events
+                </a>
+              </div>
+            }
+          }
+
+          @if (activeTab() === 'past') {
+            @if (pastRegistrations().length > 0) {
+              <div class="registrations-grid">
+                @for (registration of pastRegistrations(); track registration.id) {
+                  <app-registration-card
+                    [registration]="registration"
+                    (cancelClick)="onCancelRegistration($event)" />
+                }
+              </div>
+            } @else {
+              <div class="empty-state">
+                <i class="pi pi-calendar"></i>
+                <h3>No past registrations</h3>
+                <p>Your past event registrations will appear here</p>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

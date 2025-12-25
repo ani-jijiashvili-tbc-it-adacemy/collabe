@@ -1,0 +1,48 @@
+<div class="registration-card">
+  <div class="card-header">
+    <div class="event-date">
+      <span class="date-day">{{ formatDate(registration().startDateTime) }}</span>
+      <span class="date-time">{{ formatTime(registration().startDateTime) }}</span>
+    </div>
+    <p-tag 
+      [value]="getStatusLabel()" 
+      [severity]="getStatusSeverity()" />
+  </div>
+
+  <div class="card-content">
+    <h3 class="event-title" [routerLink]="['/user/events', registration().eventId]">
+      {{ registration().eventTitle }}
+    </h3>
+
+    <div class="event-meta">
+      <div class="meta-item">
+        <i class="pi pi-tag"></i>
+        <span>{{ registration().eventType }}</span>
+      </div>
+      <div class="meta-item">
+        <i class="pi pi-map-marker"></i>
+        <span>{{ registration().location }}</span>
+      </div>
+    </div>
+
+    <div class="registered-info">
+      <i class="pi pi-calendar-plus"></i>
+      <span>Registered on {{ formatDate(registration().registeredAt) }}</span>
+    </div>
+  </div>
+
+<div class="card-actions">
+  <button 
+    class="view-btn"
+    [routerLink]="['/user/events', registration().eventId]">
+    View Details
+  </button>
+  @if (registration().status !== 'cancelled' && !isPastEvent()) {
+    <button 
+      class="cancel-btn"
+      (click)="onCancelClick(registration().eventId)">
+      Cancel
+    </button>
+  }
+</div>
+</div>

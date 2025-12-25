@@ -1,0 +1,144 @@
+<div class="app-layout">
+  <header class="app-header">
+    <div class="logo">
+      <div class="logo-icon"></div>
+      <span>EventHub</span>
+
+      <div class="desktop-nav">
+        <nav class="main-nav">
+
+          @if (isOrganizer()) {
+            <a
+              routerLink="/admin/events"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}">
+              Event Management
+            </a>
+
+            <a
+              routerLink="/admin/analytics"
+              routerLinkActive="active">
+              Analytics
+            </a>
+
+          } @else {
+
+            <a
+              routerLink="/user/home"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: false}">
+              Home
+            </a>
+
+            <a
+              routerLink="/user/events"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: false}">
+              Browse Events
+            </a>
+
+            <a
+              routerLink="/user/my-registrations"
+              routerLinkActive="active">
+              My Registrations
+            </a>
+          }
+        </nav>
+      </div>
+    </div>
+
+    <div class="header-actions">
+
+      @if (!isOrganizer()) {
+        <a class="notification-btn" routerLink="/user/notifications">
+          <i class="pi pi-bell"></i>
+
+          @if (notificationCount() > 0) {
+            <span class="notification-badge">
+              {{ notificationCount() }}
+            </span>
+          }
+        </a>
+      }
+
+      <div class="user-menu">
+        <img [src]="userAvatar()" alt="User" class="user-avatar" />
+        <div class="user-info">
+          <span class="user-name">{{ userName() }}</span>
+          <span class="user-role">{{ userRole() }}</span>
+        </div>
+      </div>
+
+      <button
+        class="burger-menu"
+        (click)="toggleMobileMenu()"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        aria-label="Toggle menu">
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+      </button>
+    </div>
+  </header>
+
+  @if (mobileMenuOpen()) {
+    <div class="mobile-menu-overlay" (click)="closeMobileMenu()"></div>
+
+    <nav class="mobile-nav">
+
+      @if (isOrganizer()) {
+
+        <a
+          routerLink="/admin/events"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}"
+          (click)="closeMobileMenu()">
+          Event Management
+        </a>
+
+        <a
+          routerLink="/admin/analytics"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()">
+          Analytics
+        </a>
+
+      } @else {
+
+        <a
+          routerLink="/user/home"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: false}"
+          (click)="closeMobileMenu()">
+          Home
+        </a>
+
+        <a
+          routerLink="/user/events"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()">
+          Browse Events
+        </a>
+
+        <a
+          routerLink="/user/my-registrations"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()">
+          My Registrations
+        </a>
+
+        <a
+          routerLink="/user/notifications"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()">
+          Notifications
+        </a>
+      }
+
+      <button class="logout-btn" (click)="logout()">
+        <i class="pi pi-sign-out"></i>
+        Logout
+      </button>
+    </nav>
+  }
+</div>

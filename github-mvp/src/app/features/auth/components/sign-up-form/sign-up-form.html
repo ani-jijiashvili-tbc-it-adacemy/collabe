@@ -1,0 +1,223 @@
+<div class="auth-form-container">
+  <div class="auth-form-header">
+    <h1>Create Account</h1>
+  </div>
+
+  @if (hasError()) {
+  <div class="error-message">
+    <i class="pi pi-exclamation-circle"></i>
+    <span>{{ errorMessage() }}</span>
+  </div>
+  } @if (isLoading()) {
+  <app-loading-spinner />
+  } @else {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+    <div class="form-row">
+      <div class="form-field">
+        <label for="firstName">First Name</label>
+        <input
+          id="firstName"
+          type="text"
+          pInputText
+          formControlName="firstName"
+          placeholder="First name"
+          (blur)="onFieldBlur('firstName')"
+          [class.invalid]="hasFieldError('firstName')"
+        />
+        @if (hasFieldError('firstName')) {
+        <small class="error-text">
+          {{ form.controls.firstName.errors | formError }}
+        </small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="lastName">Last Name</label>
+        <input
+          id="lastName"
+          type="text"
+          pInputText
+          formControlName="lastName"
+          placeholder="Last name"
+          (blur)="onFieldBlur('lastName')"
+          [class.invalid]="hasFieldError('lastName')"
+        />
+        @if (hasFieldError('lastName')) {
+        <small class="error-text">
+          {{ form.controls.lastName.errors | formError }}
+        </small>
+        }
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        pInputText
+        formControlName="email"
+        placeholder="Enter your email"
+        (blur)="onFieldBlur('email')"
+        [class.invalid]="hasFieldError('email')"
+      />
+      @if (hasFieldError('email')) {
+      <small class="error-text">
+        {{ form.controls.email.errors | formError }}
+      </small>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="phone">Phone Number</label>
+      <div class="phone-input-group">
+        <input
+          id="phone"
+          type="tel"
+          pInputText
+          formControlName="phone"
+          placeholder="+995 555 55 55 55"
+          (blur)="onFieldBlur('phone')"
+          [class.invalid]="hasFieldError('phone')"
+        />
+        <button
+          type="button"
+          pButton
+          label="Send OTP"
+          (click)="onSendOtp()"
+          [disabled]="!canSendOtp()"
+          class="otp-button"
+        ></button>
+      </div>
+      @if (hasFieldError('phone')) {
+      <small class="error-text">
+        {{ form.controls.phone.errors | formError }}
+      </small>
+      }
+    </div>
+
+    @if (otpSent()) {
+    <div class="form-field">
+      <label for="otp">
+        <i class="pi pi-shield"></i>
+        Enter OTP Code
+      </label>
+      <div class="otp-input-container">
+        <input
+          id="otp"
+          type="text"
+          pInputText
+          formControlName="otp"
+          placeholder="000000"
+          maxlength="6"
+          (blur)="onFieldBlur('otp')"
+          [class.invalid]="hasFieldError('otp')"
+        />
+        <div class="otp-timer">Code expires in {{ otpTimerDisplay() }}</div>
+      </div>
+      @if (hasFieldError('otp')) {
+      <small class="error-text">
+        {{ form.controls.otp.errors | formError }}
+      </small>
+      }
+      <button type="button" class="link-button" (click)="onResendOtp()">
+        Resend Code
+      </button>
+    </div>
+    }
+
+    <div class="form-field">
+      <label for="department">Department</label>
+      <p-select
+        id="department"
+        formControlName="department"
+        [options]="departments()"
+        optionLabel="name"
+        placeholder="Select Department"
+        (blur)="onFieldBlur('department')"
+        [class.invalid]="hasFieldError('department')"
+        styleClass="w-full"
+      />
+      @if (hasFieldError('department')) {
+      <small class="error-text">
+        {{ form.controls.department.errors | formError }}
+      </small>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="password">Password</label>
+      <p-password
+        id="password"
+        formControlName="password"
+        placeholder="Create password"
+        (onBlur)="onFieldBlur('password')"
+        [toggleMask]="true"
+        [feedback]="true"
+        [class.invalid]="hasFieldError('password')"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      />
+      @if (hasFieldError('password')) {
+      <small class="error-text">
+        {{ form.controls.password.errors | formError }}
+      </small>
+      }
+      <small class="helper-text">
+        Password must be at least 8 characters with uppercase, lowercase, and
+        number
+      </small>
+    </div>
+
+    <div class="form-field">
+      <label for="confirmPassword">Confirm Password</label>
+      <p-password
+        id="confirmPassword"
+        formControlName="confirmPassword"
+        placeholder="Confirm password"
+        (onBlur)="onFieldBlur('confirmPassword')"
+        [toggleMask]="true"
+        [feedback]="false"
+        [class.invalid]="hasFieldError('confirmPassword')"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      />
+      @if (hasFieldError('confirmPassword')) {
+      <small class="error-text">
+        {{ form.controls.confirmPassword.errors | formError }}
+      </small>
+      }
+    </div>
+
+    <div class="checkbox-field">
+      <p-checkbox
+        formControlName="agreeToTerms"
+        [binary]="true"
+        inputId="agreeToTerms"
+      />
+      <label for="agreeToTerms">
+        I agree to the <a href="/terms" target="_blank">Terms of Service</a> and
+        <a href="/privacy" target="_blank">Privacy Policy</a>
+      </label>
+    </div>
+    @if (hasFieldError('agreeToTerms')) {
+    <small class="error-text">You must agree to the terms</small>
+    }
+
+    <button
+      type="submit"
+      pButton
+      label="Create Account"
+      [disabled]="isDisabled()"
+      class="submit-button"
+    ></button>
+
+    <div class="form-footer">
+      <span>Already have an account?</span>
+      <button type="button" class="link-button" (click)="onSignInClick()">
+        Sign in
+      </button>
+    </div>
+  </form>
+  }
+</div>

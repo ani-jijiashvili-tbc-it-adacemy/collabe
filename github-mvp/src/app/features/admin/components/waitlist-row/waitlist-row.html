@@ -1,0 +1,62 @@
+<div class="waitlist-row">
+  <div class="cell-position">
+    <div class="position-badge">{{ position() }}</div>
+  </div>
+
+  <div class="cell-participant">
+    <div class="participant-info">
+      @if (registration().participant.photo) {
+        <img
+          [src]="registration().participant.photo"
+          [alt]="registration().participant.name"
+          class="participant-avatar"
+        />
+      } @else {
+        <div class="participant-avatar placeholder">
+          {{ registration().participant.name.charAt(0) }}
+        </div>
+      }
+
+      <div class="participant-details">
+        <div class="participant-name">
+          {{ registration().participant.name }}
+        </div>
+        <div class="participant-email">
+          {{ registration().participant.email }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cell-department">
+    {{ registration().participant.department }}
+  </div>
+
+  <div class="cell-date">
+    {{ formatDate(registration().registeredAt) }}
+  </div>
+
+  <div class="cell-priority">
+    <span class="priority-badge" [ngClass]="getPriorityClass()">
+      {{ getPriorityLabel() }}
+    </span>
+  </div>
+
+  <div class="cell-actions">
+    <button
+      type="button"
+      class="action-btn promote-btn"
+      (click)="onPromote()"
+    >
+      Promote
+    </button>
+
+    <button
+      type="button"
+      class="action-btn remove-btn"
+      (click)="onRemove()"
+    >
+      Remove
+    </button>
+  </div>
+</div>

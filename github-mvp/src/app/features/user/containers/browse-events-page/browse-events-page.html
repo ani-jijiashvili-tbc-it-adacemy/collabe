@@ -1,0 +1,55 @@
+<div class="browse-events-page">
+  <div class="page-header">
+    <h1>Browse Events</h1>
+    <p>Discover upcoming company events and activities</p>
+  </div>
+
+  <div class="page-content">
+    <aside class="filters-sidebar">
+      <app-event-filters
+        [categories]="categories()"
+        [locations]="locations()"
+        (filtersChange)="onFiltersChange($event)" />
+    </aside>
+
+    <main class="events-main">
+      @if (loading()) {
+        <div class="loading-container">
+          <app-loading-spinner [size]="'80px'" />
+        </div>
+      } @else {
+        @if (events().length > 0) {
+          <div class="events-header">
+            <p class="results-count">
+              Showing {{ events().length }} of {{ totalRecords() }} events
+            </p>
+          </div>
+
+          <div class="events-grid">
+            @for (event of events(); track event.id) {
+              <app-event-card
+                [event]="event"
+                (registerClick)="onRegister($event)" />
+            }
+          </div>
+
+          @if (totalRecords() > currentFilters().pageSize) {
+            <div class="pagination-container">
+              <p-paginator
+                [first]="first()"
+                [rows]="rows()"
+                [totalRecords]="totalRecords()"
+                (onPageChange)="onPageChange($event)" />
+            </div>
+          }
+        } @else {
+          <div class="empty-state">
+            <i class="pi pi-calendar"></i>
+            <h3>No events found</h3>
+            <p>Try adjusting your filters to see more events</p>
+          </div>
+        }
+      }
+    </main>
+  </div>
+</div>

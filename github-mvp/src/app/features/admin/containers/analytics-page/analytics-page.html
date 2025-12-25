@@ -1,0 +1,270 @@
+<div class="analytics-page">
+  <header class="page-header">
+    <div class="header-content">
+      <div>
+        <h1>Analytics Dashboard</h1>
+        <p class="subtitle">Comprehensive insights into engagement metrics, event demand, and utilization patterns</p>
+      </div>
+      <button
+        type="button"
+        pButton
+        label="Export Report"
+        icon="pi pi-download"
+        (click)="onExportReport()"
+        class="export-btn"
+      ></button>
+    </div>
+  </header>
+
+  <div class="filters-section">
+    <p-select
+      [options]="dateRangeOptions"
+      [(ngModel)]="selectedDateRange"
+      (onChange)="onDateRangeChange($event.value)"
+      placeholder="Last 30 Days"
+      styleClass="filter-select"
+    />
+
+    <p-select
+      [options]="categoryOptions()"
+      [(ngModel)]="selectedCategory"
+      optionLabel="name"
+      optionValue="id"
+      (onChange)="onCategoryChange($event.value)"
+      placeholder="All Categories"
+      styleClass="filter-select"
+    />
+
+    <p-select
+      [options]="locationOptions()"
+      [(ngModel)]="selectedLocation"
+      optionLabel="label"
+      optionValue="value"
+      (onChange)="onLocationChange($event.value)"
+      placeholder="All Locations"
+      styleClass="filter-select"
+    />
+
+    <p-select
+      [options]="eventStatusOptions"
+      [(ngModel)]="selectedEventStatus"
+      (onChange)="onEventStatusChange($event.value)"
+      placeholder="All Events"
+      styleClass="filter-select"
+    />
+
+    <button
+      type="button"
+      pButton
+      label="Apply Filters"
+      (click)="onApplyFilters()"
+      class="apply-btn"
+    ></button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <app-loading-spinner />
+    </div>
+  } @else if (error()) {
+    <div class="error-container">
+      <i class="pi pi-exclamation-circle"></i>
+      <p>{{ error() }}</p>
+      <button type="button" pButton label="Retry" (click)="loadAnalytics()"></button>
+    </div>
+  } @else if (analytics()) {
+    <section class="kpi-section">
+      <h2>Key Performance Indicators</h2>
+      <div class="kpi-grid">
+        @if (kpis()) {
+          <app-kpi-card
+            icon="calendar"
+            [value]="kpis()!.totalRegistrations.value"
+            label="Total Registrations"
+            [change]="kpis()!.totalRegistrations.change"
+            subtitle="vs. previous period"
+          />
+          <app-kpi-card
+            icon="users"
+            [value]="kpis()!.activeParticipants.value"
+            label="Active Participants"
+            [change]="kpis()!.activeParticipants.change"
+            subtitle="unique employees engaged"
+          />
+          <app-kpi-card
+            icon="times-circle"
+            [value]="kpis()!.cancellationRate.value"
+            label="Cancellation Rate"
+            [change]="kpis()!.cancellationRate.change"
+            subtitle="improved from last period"
+          />
+        }
+      </div>
+    </section>
+
+    <div class="charts-row">
+      <section class="registration-trend-section">
+        <div class="section-header">
+          <h2>Registration Trend</h2>
+          <div class="view-switcher">
+            <button
+              type="button"
+              class="view-btn"
+              [class.active]="registrationTrendView() === 'week'"
+              (click)="onTrendViewChange('week')"
+            >
+              Week
+            </button>
+            <button
+              type="button"
+              class="view-btn"
+              [class.active]="registrationTrendView() === 'month'"
+              (click)="onTrendViewChange('month')"
+            >
+              Month
+            </button>
+            <button
+              type="button"
+              class="view-btn"
+              [class.active]="registrationTrendView() === 'year'"
+              (click)="onTrendViewChange('year')"
+            >
+              Year
+            </button>
+          </div>
+        </div>
+        <p class="section-subtitle">Monthly registration patterns over time</p>
+        
+        @if (data()) {
+          <div class="card">
+            <p-chart type="bar" [data]="data()" [options]="options" />
+          </div>
+        }
+      </section>
+
+      <section class="category-distribution-section">
+        <h2>Category Distribution</h2>
+        <p class="section-subtitle">Events by category type</p>
+        
+        @if (dataDestribution()) {
+          <div class="card-pie">
+            <p-chart type="pie" [data]="dataDestribution()" [options]="optionsDestribution" />
+          </div>
+
+          <div class="category-legend">
+            @for (cat of categoryDistribution(); track cat.category; let i = $index) {
+              <div class="legend-item">
+                <div class="legend-color" [style.background-color]="chartColors[i]"></div>
+                <span class="legend-label">{{ cat.category }}</span>
+                <span class="legend-value">{{ cat.percentage }}%</span>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    </div>
+
+    <section class="top-events-section">
+      <div class="section-header">
+        <h2>Top Events by Demand</h2>
+        <button type="button" class="view-full-link">View Full Report</button>
+      </div>
+      <p class="section-subtitle">Most popular events based on registration rate</p>
+
+      <div class="top-events-table">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-rank">Rank</th>
+              <th class="col-event">Event Name</th>
+              <th class="col-category">Category</th>
+              <th class="col-date">Date</th>
+              <th class="col-registrations">Registrations</th>
+              <th class="col-capacity">Capacity</th>
+              <th class="col-utilization">Utilization</th>
+              <th class="col-waitlist">Waitlist</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (event of topEvents(); track event.eventId) {
+              <tr>
+                <td class="col-rank">
+                  <div class="rank-badge" [class.top-3]="event.rank <= 3">
+                    {{ event.rank }}
+                  </div>
+                </td>
+                <td class="col-event">{{ event.eventName }}</td>
+                <td class="col-category">
+                  <span class="category-badge">{{ event.category }}</span>
+                </td>
+                <td class="col-date">{{ event.startDateTime | date: 'MMM d, y' }}</td>
+                <td class="col-registrations">{{ event.registrations }}</td>
+                <td class="col-capacity">{{ event.capacity }}</td>
+                <td class="col-utilization">
+                  <div class="utilization-cell">
+                    <div class="utilization-bar">
+                      <div
+                        class="utilization-fill"
+                        [style.width.%]="event.utilization"
+                      ></div>
+                    </div>
+                    <span class="utilization-text">{{ event.utilization }}%</span>
+                  </div>
+                </td>
+                <td class="col-waitlist">{{ event.waitlist }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="department-participation-section">
+      <h2>Department Participation</h2>
+      <p class="section-subtitle">Event engagement breakdown by department</p>
+
+      <div class="department-table">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-department">Department</th>
+              <th class="col-total">Total Employees</th>
+              <th class="col-active">Active Participants</th>
+              <th class="col-rate">Participation Rate</th>
+              <th class="col-registrations">Total Registrations</th>
+              <th class="col-avg">Avg Events/Employee</th>
+              <th class="col-trend">Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (dept of departmentParticipation(); track dept.department) {
+              <tr>
+                <td class="col-department">{{ dept.department }}</td>
+                <td class="col-total">{{ dept.totalEmployees }}</td>
+                <td class="col-active">{{ dept.activeParticipants }}</td>
+                <td class="col-rate">
+                  <div class="rate-cell">
+                    <div class="rate-bar">
+                      <div
+                        class="rate-fill"
+                        [style.width.%]="dept.participationRate"
+                      ></div>
+                    </div>
+                    <span class="rate-text">{{ dept.participationRate }}%</span>
+                  </div>
+                </td>
+                <td class="col-registrations">{{ dept.totalRegistrations }}</td>
+                <td class="col-avg">{{ dept.avgEventsPerEmployee }}</td>
+                <td class="col-trend">
+                  <span class="trend-badge" [ngClass]="getTrendClass(dept.trend)">
+                    {{ dept.trend }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+</div>

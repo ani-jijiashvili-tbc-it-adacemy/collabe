@@ -1,0 +1,156 @@
+.notification-item {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border-left: 4px solid transparent;
+  transition: all 0.2s;
+  display: flex;
+  gap: 1rem;
+
+  &.unread {
+    background: #f0f9ff;
+    border-left-color: #00adee;
+  }
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .notification-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #f3f4f6;
+
+    i {
+      font-size: 1.25rem;
+      color: #6b7280;
+    }
+  }
+
+  &.notification-registration .notification-icon {
+    background: #d1fae5;
+    i {
+      color: #10b981;
+    }
+  }
+
+  &.notification-reminder .notification-icon {
+    background: #fef3c7;
+    i {
+      color: #f59e0b;
+    }
+  }
+
+  &.notification-update .notification-icon {
+    background: #dbeafe;
+    i {
+      color: #3b82f6;
+    }
+  }
+
+  &.notification-cancellation .notification-icon {
+    background: #fee2e2;
+    i {
+      color: #ef4444;
+    }
+  }
+
+  &.notification-promotion .notification-icon {
+    background: #e0e7ff;
+    i {
+      color: #8b5cf6;
+    }
+  }
+
+  .notification-content {
+    flex: 1;
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+
+      h4 {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: #111827;
+        margin: 0;
+      }
+
+      .notification-time {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        white-space: nowrap;
+      }
+    }
+
+    .notification-message {
+      font-size: 0.875rem;
+      color: #6b7280;
+      line-height: 1.5;
+      margin: 0 0 0.75rem 0;
+    }
+
+    .notification-event-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem;
+      background: #f9fafb;
+      border-radius: 0.375rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.8125rem;
+
+      i {
+        color: #00adee;
+      }
+
+      .event-title {
+        font-weight: 500;
+        color: #374151;
+        flex: 1;
+      }
+
+      .event-date {
+        color: #6b7280;
+      }
+    }
+
+    .notification-actions {
+      display: flex;
+      gap: 0.75rem;
+
+      .action-link {
+        color: #00adee;
+        text-decoration: none;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        transition: color 0.2s;
+
+        &:hover {
+          color: #0084b8;
+        }
+      }
+
+      .mark-read-btn {
+        background: none;
+        border: none;
+        color: #6b7280;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: color 0.2s;
+
+        &:hover {
+          color: #374151;
+        }
+      }
+    }
+  }
+}

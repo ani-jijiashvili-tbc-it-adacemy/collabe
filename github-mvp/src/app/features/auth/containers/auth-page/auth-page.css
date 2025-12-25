@@ -1,0 +1,13 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-content {
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}/*# sourceMappingURL=auth-page.css.map */

@@ -1,0 +1,16 @@
+<div class="kpi-card">
+  <div class="kpi-icon">
+    <i [class]="'pi pi-' + icon()"></i>
+  </div>
+  
+  <div class="kpi-content">
+    <div class="kpi-value">{{ value() }}</div>
+    <div class="kpi-label">{{ label() }}</div>
+    <div class="kpi-subtitle">{{ subtitle() }}</div>
+  </div>
+  
+  <div class="kpi-change" [class.positive]="change() > 0" [class.negative]="change() < 0">
+    <i [class]="change() > 0 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+    <span>{{ change() > 0 ? '+' : '' }}{{ change() }}%</span>
+  </div>
+</div>

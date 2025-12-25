@@ -1,0 +1,95 @@
+<div class="filters-container">
+  <div class="filters-header">
+    <h3>Filters</h3>
+    <button class="clear-btn" (click)="clearFilters()">
+      Clear All
+    </button>
+  </div>
+
+  <div class="filter-group">
+    <label>Search Events</label>
+    <span class="p-input-icon-left search-input">
+      <i class="pi pi-search"></i>
+      <input 
+        pInputText 
+        type="text" 
+        placeholder="Search by title or description..."
+        [value]="searchText()"
+        (input)="onSearchInput($event)" />
+    </span>
+  </div>
+
+  <div class="filter-group">
+    <label>Category</label>
+    <p-multiSelect
+      [options]="categoryOptions()"
+      [ngModel]="selectedCategories()"
+      (ngModelChange)="onCategoryChange($event)"
+      placeholder="Select categories"
+      [showClear]="true"
+      display="chip"
+      styleClass="w-full" />
+  </div>
+
+  <div class="filter-group">
+    <label>Location</label>
+    <p-multiSelect
+      [options]="locationOptions()"
+      [ngModel]="selectedLocations()"
+      (ngModelChange)="onLocationChange($event)"
+      placeholder="Select locations"
+      [showClear]="true"
+      display="chip"
+      styleClass="w-full" />
+  </div>
+
+  <div class="filter-group">
+    <label>Date Range</label>
+    <div class="date-inputs">
+      <input
+        type="date"
+        class="date-input"
+        placeholder="From"
+        [value]="dateFrom()"
+        (change)="onDateFromChange($event)" />
+      <input
+        type="date"
+        class="date-input"
+        placeholder="To"
+        [value]="dateTo()"
+        (change)="onDateToChange($event)" />
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <label>Capacity Availability</label>
+    @for (option of capacityOptions; track option.value) {
+      <div class="radio-option">
+        <input
+          type="radio"
+          [id]="'capacity-' + option.value"
+          [name]="'capacity'"
+          [value]="option.value"
+          [checked]="selectedCapacity() === option.value"
+          (change)="onCapacityClick(option.value)" />
+        <label [for]="'capacity-' + option.value">{{ option.label }}</label>
+      </div>
+    }
+  </div>
+
+  <div class="filter-group">
+    <label>My Status</label>
+    @for (option of myStatusOptions; track option.value) {
+      <div class="radio-option">
+        <input
+          type="radio"
+          [id]="'status-' + option.value"
+          [name]="'myStatus'"
+          [value]="option.value"
+          [checked]="selectedMyStatus() === option.value"
+          (change)="onMyStatusClick(option.value)" />
+        <label [for]="'status-' + option.value">{{ option.label }}</label>
+      </div>
+    }
+  </div>
+</div>

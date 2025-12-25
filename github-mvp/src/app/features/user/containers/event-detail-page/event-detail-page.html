@@ -1,0 +1,254 @@
+@if (loading()) {
+<div class="loading-container">
+  <app-loading-spinner [size]="'80px'" />
+</div>
+} @else if (event()) {
+<div class="event-detail-page">
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Back to Events
+    </button>
+  </div>
+
+  <div class="event-hero">
+    @if (event()!.imageUrl) {
+    <img [src]="event()!.imageUrl" [alt]="event()!.title" class="hero-image" />
+    } @else {
+    <div class="hero-placeholder">
+      <i class="pi pi-calendar"></i>
+    </div>
+    }
+
+    <div class="hero-overlay">
+      <div class="hero-content">
+        <div class="event-badges">
+          <span class="event-type-badge">{{ event()!.eventType.name }}</span>
+          @if (event()!.isUserRegistered) {
+          <span class="registered-badge">
+            <i class="pi pi-check"></i>
+            Registered
+          </span>
+          }
+        </div>
+        <h1>{{ event()!.title }}</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="event-content">
+    <div class="main-content">
+      <div class="info-section">
+        <div class="info-grid">
+          <div class="info-item">
+            <i class="pi pi-calendar"></i>
+            <div>
+              <span class="info-label">Date</span>
+              <span class="info-value"
+                >{{ formatDate(event()!.startDateTime) }}</span
+              >
+            </div>
+          </div>
+
+          <div class="info-item">
+            <i class="pi pi-clock"></i>
+            <div>
+              <span class="info-label">Time</span>
+              <span class="info-value">
+                {{ formatTime(event()!.startDateTime) }} - {{
+                formatTime(event()!.endDateTime) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <i class="pi pi-map-marker"></i>
+            <div>
+              <span class="info-label">Location</span>
+              <span class="info-value">{{ event()!.location }}</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <i class="pi pi-users"></i>
+            <div>
+              <span class="info-label">Capacity</span>
+              <span class="info-value"
+                >{{ event()!.registeredCount }}/{{ event()!.capacity }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="description-section">
+        <h2>About This Event</h2>
+        <p>{{ event()!.description }}</p>
+      </div>
+
+      @if (event()!.tags.length > 0) {
+      <div class="tags-section">
+        <h3>Tags</h3>
+        <div class="tags-list">
+          @for (tag of event()!.tags; track tag) {
+          <p-tag [value]="tag" />
+          }
+        </div>
+      </div>
+      } @if (event()!.agenda.length > 0) {
+      <div class="agenda-section">
+        <h2>Event Agenda</h2>
+        <div class="agenda-list">
+          @for (item of event()!.agenda; track $index) {
+          <div class="agenda-item">
+            <div class="agenda-time">{{ item.time }}</div>
+            <div class="agenda-content">
+              <h4>{{ item.title }}</h4>
+              <p>{{ item.description }}</p>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      } @if (event()!.speakers.length > 0) {
+      <div class="speakers-section">
+        <h2>Featured Speakers</h2>
+        <div class="speakers-grid">
+          @for (speaker of event()!.speakers; track speaker.name) {
+          <div class="speaker-card">
+            @if (speaker.photo) {
+            <img
+              [src]="speaker.photo"
+              [alt]="speaker.name"
+              class="speaker-photo"
+            />
+            } @else {
+            <div class="speaker-photo-placeholder">
+              <i class="pi pi-user"></i>
+            </div>
+            }
+            <div class="speaker-info">
+              <h4>{{ speaker.name }}</h4>
+              <p class="speaker-title">{{ speaker.title }}</p>
+              <p class="speaker-bio">{{ speaker.bio }}</p>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      } @if (event()!.faqs.length > 0) {
+    <div class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-list">
+    @for (faq of event()!.faqs; track $index) {
+      <div class="faq-item">
+        <button 
+          class="faq-question"
+          [class.active]="openFaqIndex() === $index"
+          (click)="toggleFaq($index)">
+          <span>{{ faq.question }}</span>
+          <i class="pi" [class.pi-chevron-down]="openFaqIndex() !== $index" [class.pi-chevron-up]="openFaqIndex() === $index"></i>
+        </button>
+        @if (openFaqIndex() === $index) {
+          <div class="faq-answer">
+            <p>{{ faq.answer }}</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+      }
+
+      <div class="organizer-section">
+        <h2>Event Organizer</h2>
+        <div class="organizer-card">
+          <div class="organizer-info">
+            <h4>{{ event()!.organizer.name }}</h4>
+            <div class="organizer-contact">
+              <div class="contact-item">
+                <i class="pi pi-envelope"></i>
+                <span>{{ event()!.organizer.email }}</span>
+              </div>
+              <div class="contact-item">
+                <i class="pi pi-phone"></i>
+                <span>{{ event()!.organizer.phone }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="registration-card">
+        <div class="capacity-indicator">
+          <div class="capacity-bar">
+            <div
+              class="capacity-fill"
+              [ngClass]="getCapacityClass()"
+              [style.width.%]="getCapacityPercentage()"
+            ></div>
+          </div>
+          <div class="capacity-info">
+            <span class="spots-left">{{ availableSpots() }} spots left</span>
+            <span class="total-capacity"
+              >{{ event()!.registeredCount }}/{{ event()!.capacity }}</span
+            >
+          </div>
+        </div>
+
+        @if (event()!.waitlistCount > 0) {
+        <div class="waitlist-info">
+          <i class="pi pi-info-circle"></i>
+          <span>{{ event()!.waitlistCount }} people on waitlist</span>
+        </div>
+        } @if (event()!.userRegistrationStatus === 'confirmed') {
+        <div class="registration-status confirmed">
+          <i class="pi pi-check-circle"></i>
+          <span>You're registered!</span>
+        </div>
+        <button class="cancel-btn" (click)="onCancelRegistration()">
+          Cancel Registration
+        </button>
+        } @else if (event()!.userRegistrationStatus === 'waitlisted') {
+        <div class="registration-status waitlisted">
+          <i class="pi pi-clock"></i>
+          <span>You're on the waitlist</span>
+        </div>
+        <button class="cancel-btn" (click)="onCancelRegistration()">
+          Leave Waitlist
+        </button>
+        } @else { @if (isFull()) {
+        <button
+          class="register-btn waitlist"
+          [disabled]="registering()"
+          (click)="onRegister()"
+        >
+          @if (registering()) {
+          <i class="pi pi-spin pi-spinner"></i>
+          Processing... } @else { Join Waitlist }
+        </button>
+        } @else {
+        <button
+          class="register-btn"
+          [disabled]="registering()"
+          (click)="onRegister()"
+        >
+          @if (registering()) {
+          <i class="pi pi-spin pi-spinner"></i>
+          Processing... } @else { Register for Event }
+        </button>
+        } }
+
+        <div class="registration-note">
+          <i class="pi pi-info-circle"></i>
+          <p>
+            You can cancel your registration up to 48 hours before the event.
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+}

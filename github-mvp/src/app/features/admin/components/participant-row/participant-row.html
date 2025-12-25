@@ -1,0 +1,69 @@
+
+<div class="participant-row">
+  <div class="cell-checkbox">
+    <input
+      type="checkbox"
+      [checked]="selected()"
+      (change)="onSelectionChange($event)"
+    />
+  </div>
+
+  <div class="cell-participant">
+    <div class="participant-info">
+      @if (registration().participant.photo) {
+        <img
+          [src]="registration().participant.photo"
+          [alt]="registration().participant.name"
+          class="participant-avatar"
+        />
+      } @else {
+        <div class="participant-avatar placeholder">
+          {{ registration().participant.name.charAt(0) }}
+        </div>
+      }
+
+      <div class="participant-details">
+        <div class="participant-name">
+          {{ registration().participant.name }}
+        </div>
+        <div class="participant-email">
+          {{ registration().participant.email }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cell-department">
+    {{ registration().participant.department }}
+  </div>
+
+  <div class="cell-date">
+    {{ formatDate(registration().registeredAt) }}
+  </div>
+
+  <div class="cell-status">
+    <span class="status-badge" [ngClass]="getStatusClass()">
+      {{ registration().status }}
+    </span>
+  </div>
+
+  <div class="cell-actions">
+    <button
+      type="button"
+      class="action-icon"
+      (click)="onEmail()"
+      title="Send Email"
+    >
+      <i class="pi pi-envelope"></i>
+    </button>
+
+    <button
+      type="button"
+      class="action-icon"
+      (click)="onCall()"
+      title="Call"
+    >
+      <i class="pi pi-phone"></i>
+    </button>
+  </div>
+</div>

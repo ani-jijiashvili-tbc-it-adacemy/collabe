@@ -1,0 +1,54 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  LATEST_TAG: $CI_REGISTRY_IMAGE:latest
+  
+# =========================
+# BUILD FRONTEND IMAGE
+# =========================
+build_frontend:
+  stage: build
+  image: docker:24.0.7
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - name: docker:24.0.7-dind
+      command: ["--mtu=1460"]
+
+  before_script:
+    - docker info
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+
+  script:
+    - docker build -t "$IMAGE_TAG" -t "$LATEST_TAG" .
+    - docker push "$IMAGE_TAG"
+    - docker push "$LATEST_TAG"
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+
+# =========================
+# DEPLOY TO VM
+# =========================
+deploy_frontend:
+  stage: deploy
+  tags:
+    - shell   # must match your shell runner tag
+
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+
+  script:
+    - cd /opt/colab
+    - docker compose pull nginx
+    - docker compose up -d nginx
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+
+  needs:
+    - build_frontend

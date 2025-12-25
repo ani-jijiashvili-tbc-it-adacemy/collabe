@@ -1,0 +1,13 @@
+<div class="registration-tabs">
+  @for (tab of tabs(); track tab.key) {
+    <button
+      type="button"
+      class="tab"
+      [class.active]="isActive(tab.key)"
+      (click)="onTabClick(tab.key)"
+    >
+      <span class="tab-label">{{ tab.label }}</span>
+      <span class="tab-count">({{ tab.count }})</span>
+    </button>
+  }
+</div>

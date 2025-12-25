@@ -1,0 +1,66 @@
+<div class="notifications-page">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <h1>Notifications</h1>
+        <p>Stay updated on event registrations, reminders, and important changes</p>
+      </div>
+      @if (counts().unread > 0) {
+        <button class="mark-all-btn" (click)="markAllAsRead()">
+          Mark All as Read
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="filters-bar">
+      <button
+        class="filter-btn"
+        [class.active]="activeFilter() === 'all'"
+        (click)="setFilter('all')">
+        All ({{ counts().all }})
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="activeFilter() === 'unread'"
+        (click)="setFilter('unread')">
+        Unread ({{ counts().unread }})
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="activeFilter() === 'registrations'"
+        (click)="setFilter('registrations')">
+        Registrations ({{ counts().registrations }})
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="activeFilter() === 'reminders'"
+        (click)="setFilter('reminders')">
+        Reminders ({{ counts().reminders }})
+      </button>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-container">
+        <app-loading-spinner [size]="'80px'" />
+      </div>
+    } @else {
+      @if (notifications().length > 0) {
+        <div class="notifications-list">
+          @for (notification of notifications(); track notification.id) {
+            <app-notification-item
+              [notification]="notification"
+              (markAsReadClick)="onMarkAsRead($event)" />
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <i class="pi pi-bell"></i>
+          <h3>No notifications</h3>
+          <p>You're all caught up! Check back later for updates.</p>
+        </div>
+      }
+    }
+  </div>
+</div>

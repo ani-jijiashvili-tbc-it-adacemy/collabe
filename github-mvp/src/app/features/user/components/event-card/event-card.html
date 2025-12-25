@@ -1,0 +1,72 @@
+<div class="event-card" [routerLink]="['/user/events', event().id]">
+  <div class="event-image">
+    @if (event().imageUrl) {
+      <img [src]="event().imageUrl" [alt]="event().title" />
+    } @else {
+      <div class="placeholder-image">
+        <i class="pi pi-calendar"></i>
+      </div>
+    }
+    
+    @if (event().isUserRegistered) {
+      <span class="registered-badge">Registered</span>
+    }
+    
+    <span class="event-type-badge">{{ event().eventType.name }}</span>
+  </div>
+
+  <div class="event-content">
+    <div class="event-header">
+      <div class="event-date">
+        <span class="date-day">{{ formatDate(event().startDateTime) }}</span>
+        <span class="date-time">{{ formatTime(event().startDateTime) }}</span>
+      </div>
+    </div>
+
+    <h3 class="event-title">{{ event().title }}</h3>
+    <p class="event-description">{{ event().description }}</p>
+
+    <div class="event-meta">
+      <div class="meta-item">
+        <i class="pi pi-map-marker"></i>
+        <span>{{ event().location }}</span>
+      </div>
+    </div>
+
+    <div class="event-tags">
+      @for (tag of event().tags; track tag) {
+        <span class="tag">{{ tag }}</span>
+      }
+    </div>
+
+    <div class="event-footer">
+      <div class="capacity-info" [ngClass]="getCapacityClass()">
+        <i class="pi pi-users"></i>
+        <span>{{ event().registeredCount }}/{{ event().capacity }}</span>
+        @if (event().isFull) {
+          <span class="spots-label">Full</span>
+        } @else {
+          <span class="spots-label">{{ event().capacity - event().registeredCount }} spots left</span>
+        }
+      </div>
+
+      @if (!event().isUserRegistered) {
+        <button 
+          class="register-btn"
+          (click)="onRegisterClick(event().id); $event.stopPropagation()"
+          [disabled]="event().isFull">
+          @if (event().isFull) {
+            Join Waitlist
+          } @else {
+            Register
+          }
+        </button>
+      } @else {
+        <button class="registered-btn" disabled>
+          <i class="pi pi-check"></i>
+          Registered
+        </button>
+      }
+    </div>
+  </div>
+</div>

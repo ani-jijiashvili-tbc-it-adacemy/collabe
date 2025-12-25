@@ -1,0 +1,27 @@
+<div class="auth-page">
+  <div class="auth-content">
+    @if (isSignInView()) {
+      <app-sign-in-form
+        (submitForm)="onLogin($event)"
+        (navigateToSignUp)="onNavigateToSignUp()"
+        (navigateToForgotPassword)="onNavigateToForgotPassword()"
+      />
+    }
+
+  @if (isSignUpView()) {
+  <app-sign-up-form
+    (submitForm)="onRegister($event)"
+    (navigateToSignIn)="onNavigateToSignIn()"
+    (sendOtp)="onSendOtp($event)"
+    (verifyOtp)="onVerifyOtp($event)"
+  />
+}
+
+    @if (isForgotPasswordView()) {
+      <app-forgot-password-form
+        (submitForm)="onForgotPassword($event)"
+        (navigateToSignIn)="onNavigateToSignIn()"
+      />
+    }
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<div class="home-page">
+  <div class="welcome-section">
+    <div class="welcome-content">
+      <h1>{{ getGreeting() }}, {{ userName() }}!</h1>
+      <p>Stay connected with upcoming company events and activities</p>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="main-content">
+      <section class="upcoming-section">
+        <div class="section-header">
+          <h2>Upcoming Events</h2>
+          <a routerLink="/user/events" class="view-all-link">
+            View all
+            <i class="pi pi-arrow-right"></i>
+          </a>
+        </div>
+
+        @if (loading()) {
+        <div class="loading-container">
+          <app-loading-spinner [size]="'60px'" />
+        </div>
+        } @else { @if (upcomingEvents().length > 0) {
+        <div class="events-grid">
+          @for (event of upcomingEvents(); track event.id) {
+          <app-event-card
+            [event]="event"
+            (registerClick)="onRegister($event)"
+          />
+          }
+        </div>
+        } @else {
+        <div class="empty-state">
+          <i class="pi pi-calendar"></i>
+          <h3>No upcoming events</h3>
+          <p>Check back later for new events</p>
+        </div>
+        } }
+      </section>
+
+      <section class="categories-section">
+        <div class="section-header">
+          <h2>Browse by Category</h2>
+        </div>
+
+        <div class="categories-grid">
+          @for (category of categories(); track category.id) {
+          <a
+            [routerLink]="['/user/events']"
+            [queryParams]="{categories: category.id}"
+            class="category-card"
+          >
+            <div class="category-icon">
+              <i class="pi" [ngClass]="getCategoryIcon(category.icon)"></i>
+            </div>
+            <div class="category-info">
+              <h3>{{ category.name }}</h3>
+              <p>{{ category.eventCount }} events</p>
+            </div>
+          </a>
+          }
+        </div>
+      </section>
+    </div>
+
+    <aside class="sidebar">
+      <div class="calendar-widget">
+        <h3>Event Calendar</h3>
+        <p-calendar [(ngModel)]="selectedDate" dateFormat="yy-mm-dd" />
+        <div class="calendar-legend">
+          <div class="legend-item">
+            <span class="legend-dot event"></span>
+            <span>Events scheduled</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <a routerLink="/user/events" class="action-btn">
+          <i class="pi pi-search"></i>
+          <span>Browse Events</span>
+        </a>
+        <a routerLink="/user/my-registrations" class="action-btn">
+          <i class="pi pi-calendar-plus"></i>
+          <span>My Registrations</span>
+        </a>
+        <a routerLink="/user/notifications" class="action-btn">
+          <i class="pi pi-bell"></i>
+          <span>Notifications</span>
+        </a>
+      </div>
+    </aside>
+  </div>
+</div>

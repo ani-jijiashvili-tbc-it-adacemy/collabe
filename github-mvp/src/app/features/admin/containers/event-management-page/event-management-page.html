@@ -1,0 +1,204 @@
+<div class="event-management-page">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <h1>Event Management</h1>
+        <p class="subtitle">Create, edit, and manage all company events</p>
+      </div>
+      <button
+        type="button"
+        pButton
+        label="Create New Event"
+        icon="pi pi-plus"
+        (click)="onCreateEvent()"
+        class="create-btn"
+      ></button>
+    </div>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-bar">
+      <i class="pi pi-search"></i>
+      <input
+        type="text"
+        pInputText
+        placeholder="Search events by title, category, or location..."
+        [value]="searchQuery()"
+        (input)="onSearch($any($event.target).value)"
+      />
+    </div>
+
+    <div class="filter-controls">
+      <p-select
+        [options]="statusOptions"
+        [(ngModel)]="selectedStatus"
+        (onChange)="onStatusChange($event.value)"
+        placeholder="All Status"
+        styleClass="filter-select"
+      />
+
+      <p-select
+        [options]="categoryOptions()"
+        [(ngModel)]="selectedCategory"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="All Categories"
+        styleClass="filter-select"
+        (onChange)="onCategoryChange($event.value)"
+      />
+      <p-select
+  [options]="sortOrderOptions"
+  [(ngModel)]="sortOrder"
+  (onChange)="onToggleSortOrder($event.value)"
+  placeholder="Sort by Date"
+  styleClass="filter-select"
+/>
+    </div>
+  </div>
+
+  <div class="list-header">
+    <div class="list-info">
+      <span>Showing {{ events().length }} events</span>
+    </div>
+    <button
+      type="button"
+      pButton
+      label="Export List"
+      icon="pi pi-download"
+      class="export-btn"
+      (click)="onExportList()"
+    ></button>
+  </div>
+
+  @if (isLoading()) {
+  <div class="loading-container">
+    <app-loading-spinner />
+  </div>
+  } @else if (error()) {
+  <div class="error-container">
+    <i class="pi pi-exclamation-circle"></i>
+    <p>{{ error() }}</p>
+    <button type="button" pButton label="Retry" (click)="loadEvents()"></button>
+  </div>
+  } @else if (events().length === 0) {
+  <div class="empty-state">
+    <i class="pi pi-calendar"></i>
+    <h3>No events found</h3>
+    <p>Create your first event to get started</p>
+    <button
+      type="button"
+      pButton
+      label="Create Event"
+      (click)="onCreateEvent()"
+    ></button>
+  </div>
+  } @else {
+  <div class="events-table">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-checkbox">
+            <input
+              type="checkbox"
+              [checked]="allSelected()"
+              (change)="onToggleSelectAll()"
+            />
+          </th>
+          <th class="col-event">Event Details</th>
+          <th class="col-datetime table-title">Date & Time</th>
+          <th class="col-location table-title">Location</th>
+          <th class="col-category table-title">Category</th>
+          <th class="col-registrations table-title">Registrations</th>
+          <th class="col-capacity table-title">Capacity</th>
+          <th class="col-status table-title">Status</th>
+          <th class="col-actions table-title">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (event of events(); track event.id) {
+        <tr>
+          <td>
+            <input
+              type="checkbox"
+              [checked]="isEventSelected(event.id)"
+              (change)="onToggleSelection(event.id)"
+            />
+          </td>
+          <td colspan="8">
+            <app-event-card
+              [event]="event"
+              (view)="onViewEvent($event)"
+              (edit)="onEditEvent($event)"
+              (delete)="onDeleteEvent($event)"
+            />
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (hasSelection()) {
+  <div class="bulk-actions">
+    <span>{{ selectedEventIds().size }} events selected</span>
+    <div class="action-buttons">
+      <button
+        type="button"
+        pButton
+        label="Export Selected"
+        icon="pi pi-download"
+        (click)="onExportSelected()"
+        class="secondary-btn"
+      ></button>
+      <button
+        type="button"
+        pButton
+        label="Delete Selected"
+        icon="pi pi-trash"
+        (click)="onDeleteSelected()"
+        class="danger-btn"
+      ></button>
+      <button
+        type="button"
+        pButton
+        label="Clear Selection"
+        (click)="onClearSelection()"
+        class="text-btn"
+      ></button>
+    </div>
+  </div>
+  } @if (totalPages() > 1) {
+  <div class="pagination">
+    <button
+      type="button"
+      class="page-btn"
+      [disabled]="currentPage() === 1"
+      (click)="onPageChange(currentPage() - 1)"
+    >
+      <i class="pi pi-chevron-left"></i>
+    </button>
+
+    @for (page of getPageNumbers(); track page) { @if (page === -1) {
+    <span class="page-ellipsis">...</span>
+    } @else {
+    <button
+      type="button"
+      class="page-btn"
+      [class.active]="currentPage() === page"
+      (click)="onPageChange(page)"
+    >
+      {{ page }}
+    </button>
+    } }
+
+    <button
+      type="button"
+      class="page-btn"
+      [disabled]="currentPage() === totalPages()"
+      (click)="onPageChange(currentPage() + 1)"
+    >
+      <i class="pi pi-chevron-right"></i>
+    </button>
+  </div>
+  } }
+</div>

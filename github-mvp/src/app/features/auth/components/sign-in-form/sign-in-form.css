@@ -1,0 +1,176 @@
+.auth-form-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+}
+
+.auth-form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.auth-form-header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #1a1a1a;
+}
+.auth-form-header .auth-form-subtitle {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 1.5rem;
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  color: #c33;
+  font-size: 0.875rem;
+}
+.error-message i {
+  font-size: 1rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.form-field label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #333;
+}
+.form-field input, .form-field ::ng-deep .p-password {
+  width: 100%;
+}
+.form-field input.invalid, .form-field ::ng-deep .p-password.invalid .p-inputtext {
+  border-color: #c33;
+}
+.form-field .error-text {
+  color: #c33;
+  font-size: 0.75rem;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -0.5rem;
+}
+.form-options .checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.form-options .checkbox-field label {
+  font-size: 0.875rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+}
+.link-button:hover {
+  text-decoration: underline;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  background: #1a1a1a;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+}
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #666;
+}
+.form-footer span {
+  margin-right: 0.25rem;
+}
+
+::ng-deep .p-password {
+  display: block;
+}
+::ng-deep .p-password input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+::ng-deep .p-password .p-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+::ng-deep .p-password {
+  display: block;
+}
+::ng-deep .p-password input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+::ng-deep .p-password input::-moz-placeholder {
+  color: #d3d3d3;
+}
+::ng-deep .p-password input::placeholder {
+  color: #d3d3d3;
+}
+::ng-deep .p-password .p-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+::ng-deep .p-checkbox .p-checkbox-box {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+  background: #000;
+  border-color: #000;
+}
+::ng-deep .p-checkbox .p-checkbox-box .p-checkbox-icon {
+  font-size: 0.65rem;
+}
+
+input::-moz-placeholder {
+  color: #d3d3d3;
+}
+
+input::placeholder {
+  color: #d3d3d3;
+}/*# sourceMappingURL=sign-in-form.css.map */

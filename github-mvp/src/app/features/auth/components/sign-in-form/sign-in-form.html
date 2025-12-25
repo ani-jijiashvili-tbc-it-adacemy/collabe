@@ -1,0 +1,94 @@
+<div class="auth-form-container">
+  <div class="auth-form-header">
+    <h1>Sign In</h1>
+    <p class="auth-form-subtitle">Enter your credentials to access your account</p>
+  </div>
+
+  @if (hasError()) {
+    <div class="error-message">
+      <i class="pi pi-exclamation-circle"></i>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <app-loading-spinner />
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input 
+          id="email"
+          type="email"
+          pInputText
+          formControlName="email"
+          placeholder="Enter your email"
+          (blur)="onEmailBlur()"
+          [class.invalid]="showEmailError()"
+        />
+        @if (showEmailError()) {
+          <small class="error-text">
+            {{ emailControl().errors | formError }}
+          </small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          placeholder="Enter your password"
+          (onBlur)="onPasswordBlur()"
+          [toggleMask]="true"
+          [feedback]="false"
+          [class.invalid]="showPasswordError()"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        />
+        @if (showPasswordError()) {
+          <small class="error-text">
+            {{ passwordControl().errors | formError }}
+          </small>
+        }
+      </div>
+
+      <div class="form-options">
+        <div class="checkbox-field">
+          <p-checkbox
+            formControlName="rememberMe"
+            [binary]="true"
+            inputId="rememberMe"
+          />
+          <label for="rememberMe">Remember me</label>
+        </div>
+        <button 
+          type="button" 
+          class="link-button"
+          (click)="onForgotPasswordClick()"
+        >
+          Forgot password?
+        </button>
+      </div>
+
+      <button 
+        type="submit" 
+        pButton 
+        label="Sign In"
+        [disabled]="isDisabled()"
+        class="submit-button"
+      ></button>
+
+      <div class="form-footer">
+        <span>Don't have an account?</span>
+        <button 
+          type="button" 
+          class="link-button"
+          (click)="onSignUpClick()"
+        >
+          Sign up
+        </button>
+      </div>
+    </form>
+  }
+</div>

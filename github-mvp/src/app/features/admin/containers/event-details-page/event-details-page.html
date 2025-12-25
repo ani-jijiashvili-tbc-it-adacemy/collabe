@@ -1,0 +1,275 @@
+<div class="event-details-page">
+  @if (isLoading() && !event()) {
+  <div class="loading-container">
+    <app-loading-spinner />
+  </div>
+  } @else if (error() && !event()) {
+  <div class="error-container">
+    <i class="pi pi-exclamation-circle"></i>
+    <p>{{ error() }}</p>
+    <button
+      type="button"
+      pButton
+      label="Go Back"
+      (click)="navigateBack()"
+    ></button>
+  </div>
+  } @else if (event()) {
+  <div class="breadcrumb">
+    <button type="button" class="breadcrumb-link" (click)="navigateBack()">
+      Event Management
+    </button>
+    <i class="pi pi-chevron-right"></i>
+    <span>{{ event()!.title }}</span>
+    <i class="pi pi-chevron-right"></i>
+    <span>Registrations & Waitlist</span>
+  </div>
+
+  <header class="event-header">
+    <div class="event-info">
+      <div class="event-title-row">
+        <h1>{{ event()!.title }}</h1>
+        <span class="status-badge status-upcoming">Upcoming</span>
+      </div>
+
+      <div class="event-meta">
+        <div class="meta-item">
+          <i class="pi pi-calendar"></i>
+          <span>{{ formatDate(event()!.startDateTime) }}</span>
+        </div>
+        <div class="meta-item">
+          <i class="pi pi-clock"></i>
+          <span
+            >{{ formatTime(event()!.startDateTime) }} - {{
+            formatTime(event()!.endDateTime) }}</span
+          >
+        </div>
+        <div class="meta-item">
+          <i class="pi pi-map-marker"></i>
+          <span>{{ event()!.location }}</span>
+        </div>
+        <div class="meta-item">
+          <i class="pi pi-tag"></i>
+          <span>{{ event()!.eventType.name }}</span>
+        </div>
+      </div>
+
+      <div class="capacity-info">
+        <div class="capacity-item">
+          <i class="pi pi-users"></i>
+          <span><strong>{{ event()!.capacity }}</strong> Capacity</span>
+        </div>
+        <div class="capacity-item">
+          <i class="pi pi-check-circle"></i>
+          <span
+            ><strong>{{ event()!.registeredCount }}</strong> Registered</span
+          >
+        </div>
+        <div class="capacity-item">
+          <i class="pi pi-clock"></i>
+          <span><strong>{{ event()!.waitlistCount }}</strong> Waitlisted</span>
+        </div>
+        <div class="capacity-item">
+          <i class="pi pi-check"></i>
+          <span
+            ><strong>{{ event()!.capacity - event()!.registeredCount }}</strong>
+            Available</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      pButton
+      label="Edit Event"
+      icon="pi pi-pencil"
+      (click)="onEditEvent()"
+      class="edit-btn"
+    ></button>
+  </header>
+
+  <div class="actions-bar">
+    <button
+      type="button"
+      pButton
+      label="Export All Data"
+      icon="pi pi-download"
+      (click)="onExportAll()"
+      class="export-btn"
+    ></button>
+
+    <div class="search-bar">
+      <i class="pi pi-search"></i>
+      <input
+        type="text"
+        pInputText
+        placeholder="Search participants..."
+        [value]="searchQuery()"
+        (input)="onSearch($any($event.target).value)"
+      />
+    </div>
+  </div>
+
+  <app-registration-tabs
+    [activeTab]="activeTab()"
+    [registeredCount]="registeredCount()"
+    [waitlistCount]="waitlistCount()"
+    [cancelledCount]="cancelledCount()"
+    (tabChange)="onTabChange($event)"
+  />
+
+  @if (registrations().length === 0) {
+  <div class="empty-state">
+    <i class="pi pi-users"></i>
+    <h3>No {{ activeTab() }} participants</h3>
+    <p>There are no participants in this category yet.</p>
+  </div>
+  } @else {
+  <div class="registrations-table">
+    <div class="participants-grid">
+      <div class="grid-header">
+        @if (activeTab() !== 'waitlist') {
+        <div class="col-checkbox"></div>
+        } @if (activeTab() === 'waitlist') {
+        <div class="col-position">Position</div>
+        }
+
+        <div class="col-participant">Participant</div>
+        <div class="col-department">Department</div>
+
+        <div class="col-date">
+          @if (activeTab() === 'waitlist') { Waitlisted Since } @else if
+          (activeTab() === 'cancelled') { Cancelled At } @else { Registration
+          Date }
+        </div>
+
+        @if (activeTab() !== 'waitlist') {
+        <div class="col-status">Status</div>
+        <div class="col-contact">Contact</div>
+        } @else {
+        <div class="col-priority">Priority</div>
+        <div class="col-actions">Actions</div>
+        }
+      </div>
+
+      <div class="grid-body">
+        @if (activeTab() === 'waitlist') { @for (registration of
+        registrations(); track registration.id; let i = $index) {
+        <app-waitlist-row
+          [registration]="registration"
+          [position]="i + 1"
+          (promote)="onPromoteWaitlist($event)"
+          (remove)="onRemoveWaitlist($event)"
+        />
+        } } @else { @for (registration of registrations(); track
+        registration.id) {
+        <app-participant-row
+          [registration]="registration"
+          [selected]="isRegistrationSelected(registration.id)"
+          (selectionChange)="onToggleSelection(registration.id)"
+          (contact)="onContactParticipant($event)"
+        />
+        } }
+      </div>
+    </div>
+  </div>
+
+  <div class="table-footer">
+    <div class="showing-info">
+      Showing 1-{{ registrations().length }} of {{ totalRegistrations() }}
+      participants
+    </div>
+
+    @if (hasSelection()) {
+    <div class="bulk-actions">
+      <span>{{ selectedRegistrationIds().size }} participants selected</span>
+      <button
+        type="button"
+        pButton
+        label="Export Selected"
+        (click)="onExportSelected()"
+        class="secondary-btn"
+      ></button>
+      <button
+        type="button"
+        pButton
+        label="Delete Selected"
+        [disabled]="isDeleting()"
+        [loading]="isDeleting()"
+        (click)="onDeleteSelected()"
+        class="danger-btn"
+      ></button>
+      <button type="button" class="clear-btn" (click)="onClearSelection()">
+        Clear Selection
+      </button>
+    </div>
+    }
+  </div>
+
+  @if (totalPages() > 1) {
+  <div class="pagination">
+    <button
+      type="button"
+      class="page-btn"
+      [disabled]="currentPage() === 1"
+      (click)="onPageChange(currentPage() - 1)"
+    >
+      <i class="pi pi-chevron-left"></i>
+    </button>
+
+    @for (page of getPageNumbers(); track page) { @if (page === -1) {
+    <span class="page-ellipsis">...</span>
+    } @else {
+    <button
+      type="button"
+      class="page-btn"
+      [class.active]="currentPage() === page"
+      (click)="onPageChange(page)"
+    >
+      {{ page }}
+    </button>
+    } }
+
+    <button
+      type="button"
+      class="page-btn"
+      [disabled]="currentPage() === totalPages()"
+      (click)="onPageChange(currentPage() + 1)"
+    >
+      <i class="pi pi-chevron-right"></i>
+    </button>
+  </div>
+  } } @if (waitlistCount() > 0) {
+  <div class="waitlist-section">
+    <div class="section-header">
+      <h2>Waitlist ({{ waitlistCount() }})</h2>
+    </div>
+
+    <div class="registrations-table">
+      <div class="waitlist-grid">
+        <div class="grid-header">
+          <div class="col-position">Position</div>
+          <div class="col-participant">Participant</div>
+          <div class="col-department">Department</div>
+          <div class="col-date">Waitlisted Since</div>
+          <div class="col-priority">Priority</div>
+          <div class="col-actions">Actions</div>
+        </div>
+
+        <div class="grid-body">
+          @for (registration of getWaitlistRegistrations(); track
+          registration.id; let i = $index) {
+          <app-waitlist-row
+            [registration]="registration"
+            [position]="i + 1"
+            (promote)="onPromoteWaitlist($event)"
+            (remove)="onRemoveWaitlist($event)"
+          />
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  } }
+</div>

@@ -1,0 +1,69 @@
+.registration-tabs {
+  display: flex;
+  gap: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding: 0;
+  margin: 0 0 2rem 0;
+    @media screen and (max-width:1024px){
+      flex-direction: column;
+      gap: 8px;
+    }
+
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  color: #6b7280;
+  transition: color 0.2s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: transparent;
+    transition: background 0.2s;
+  }
+
+  &:hover {
+    color: #111827;
+  }
+
+  &.active {
+    color: #111827;
+    font-weight: 600;
+
+    &::after {
+      background: #000;
+    }
+
+    .tab-count {
+      background: #000;
+      color: white;
+    }
+  }
+}
+
+.tab-label {
+  font-weight: inherit;
+}
+
+.tab-count {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #f3f4f6;
+  color: #6b7280;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
