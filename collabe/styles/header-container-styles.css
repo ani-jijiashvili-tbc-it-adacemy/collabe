@@ -1,0 +1,45 @@
+.header-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    max-width: 1440px;
+    height: 200px;
+    margin: 0 auto;
+    font-size: 32px;
+}
+
+.header-container-inner{
+    display: flex;
+    justify-content: space-between;
+    max-width: 1110px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.header-container-logo-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-container-logo {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    z-index: 1;
+    padding-right: 10px;
+}
+
+.header-container-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Chivo";
+    font-weight: 4000;
+    color: #FFFFFF;
+}
+
+.header-container-background {
+    position: absolute;
+    z-index: 0;
+}
